@@ -3,34 +3,35 @@ async function reloadTagsFromFile(filename) {
   const data = await res.json();
 
   let groups = [];
-
-  // --- キャラクターjsonのとき transformation配列で受け取る ---
+  // --- キャラプロファイル型
   if (data.transformation && Array.isArray(data.transformation)) {
     groups = data.transformation;
   }
-  // --- タグjsonのとき そのままgroup配列で受け取る ---
+  // --- タグjson（1グループオブジェクト型）
+  else if (data.group && data.tags && Array.isArray(data.tags)) {
+    groups = [data];
+  }
+  // --- タグjson（配列型）
   else if (Array.isArray(data) && data[0]?.tags) {
     groups = data;
-  } else {
-    alert("対応していないファイル形式です。");
+  }
+  else {
+    alert("未対応json型: " + JSON.stringify(data));
     document.getElementById('tag-container').innerHTML = '';
     document.getElementById('nsfw-tag-container').innerHTML = '';
     return;
   }
 
-  // --- UIクリア ---
   document.getElementById('tag-container').innerHTML = '';
   document.getElementById('nsfw-tag-container').innerHTML = '';
 
-  // --- UI生成 ---
   groups.forEach(group => {
-    // グループタイトル
-    if (group.group || group.label) {
-      const groupHeader = document.createElement('div');
-      groupHeader.innerHTML = `<b>${group.group || ""}${group.label ? "｜" + group.label : ""}</b>`;
-      document.getElementById('tag-container').appendChild(groupHeader);
-    }
-    // タグリスト
+    // 見出し
+    const groupHeader = document.createElement('div');
+    groupHeader.innerHTML = `<b>${group.group || ""}${group.label ? "｜" + group.label : ""}</b>`;
+    document.getElementById('tag-container').appendChild(groupHeader);
+
+    // タグ
     const tagBox = document.createElement('div');
     (group.tags || []).forEach(tag => {
       const label = document.createElement('label');
