@@ -2,112 +2,65 @@
 <html lang="ja">
 <head>
   <meta charset="UTF-8">
-  <title>プロンプトメーカー - Nova Anime XL</title>
-  <link rel="stylesheet" href="style.css">
+  <title>Nova Anime XL プロンプトメーカー</title>
+  <style>
+    body { font-family: sans-serif; background: #faf9f7; color: #222; padding: 2em; }
+    header, footer { text-align: center; margin-bottom: 2em; }
+    main { max-width: 860px; margin: auto; }
+    .mode-btn { margin: 0 10px; padding: 0.5em 1.5em; font-size: 1.05em; border-radius: 7px; border: none; background: #ffdcb0; cursor: pointer; }
+    .mode-btn.selected { background: #ffb95e; color: #fff; }
+    .cat-card { background: #fffbe8; border-radius: 12px; box-shadow: 0 1px 7px #eed9c6bb; margin-bottom: 1.2em; padding: 1.2em; }
+    #tag-container label, #lora-container label { margin-right: 1em; }
+    textarea { width: 100%; min-height: 3.3em; margin-bottom: .5em; background: #fff; font-size: 1.08em; border: 2px solid #ffb95e; border-radius: 8px; padding: 0.7em; }
+    .prompt-section { display: flex; gap: 1em; flex-wrap: wrap; }
+    .prompt-col { flex: 1 1 230px; min-width: 210px; }
+    .prompt-label { font-weight: bold; margin-bottom: 0.3em; display:block; }
+    .btn-copy { font-size: 1em; border-radius: 7px; padding: 0.3em 1.2em; background: #ececec; border: 1px solid #aaa; cursor: pointer; margin-bottom: .7em;}
+    .btn-copy:active { background: #ffe1b3;}
+    #reset-btn { background: #ff8585; color: #fff; margin-left: 1em;}
+    @media (max-width:700px) {
+      .prompt-section { flex-direction: column; }
+      .prompt-col { min-width: 0; }
+    }
+  </style>
 </head>
 <body>
-
-  <!-- ヘッダー -->
   <header>
-    <h1>🌌 プロンプトメーカー</h1>
-    <p>Nova Anime XL 向け高精度プロンプト自動生成ツール</p>
+    <h1>Nova Anime XL プロンプトメーカー</h1>
+    <p>2D/2.5D切替、タグ・LoRA、プリセット保存、各種プロンプト出力</p>
   </header>
-
-  <!-- メイン -->
   <main>
-
-    <!-- モード切替 -->
-    <section id="mode-select">
-      <h2>モード切替</h2>
-      <label><input type="radio" name="mode" value="2d" checked> 2D</label>
-      <label><input type="radio" name="mode" value="2.5d"> 2.5D</label>
-      <label><input type="radio" name="mode" value="real"> リアル</label>
-    </section>
-
-    <!-- タグデータセット切替 -->
-    <section id="dataset-select">
-      <h2>タグセット選択</h2>
-      <select id="tag-dataset" onchange="reloadTagsFromFile(this.value)">
-        <option value="tags_default.json">通常タグセット</option>
-        <option value="tags_fantasy.json">ファンタジー</option>
-      </select>
-    </section>
-
-    <!-- タグUI -->
-    <section id="tag-ui">
-      <h2>タグ選択</h2>
-      <div id="tag-container"></div>
-    </section>
-
-    <!-- NSFW切替＆タグ -->
-    <section id="nsfw-toggle">
-      <label><input type="checkbox" id="enable-nsfw"> NSFWタグを有効にする</label>
-    </section>
-    <section id="nsfw-tag-ui" style="display:none;">
-      <h2>NSFWタグ</h2>
-      <div id="nsfw-tag-container"></div>
-    </section>
-
-    <!-- LoRA選択 -->
-    <section id="lora-ui">
-      <h2>LoRA選択</h2>
-      <div id="lora-container"></div>
-    </section>
-
-    <!-- 出力欄 -->
-    <section>
-      <h2>生成プロンプト</h2>
-      <div class="prompt-block">
-        <label for="positive-output">Positive Prompt</label>
-        <textarea id="positive-output" rows="4" readonly></textarea>
-        <div class="prompt-buttons">
-          <button onclick="copyToClipboard('positive-output')">コピー</button>
-          <button onclick="clearPrompt('positive-output')">リセット</button>
-        </div>
+    <div>
+      <button class="mode-btn selected" id="mode-2_5d">2.5D</button>
+      <button class="mode-btn" id="mode-2d">2D</button>
+      <button id="reset-btn">全リセット</button>
+    </div>
+    <div class="cat-card" id="tag-container"></div>
+    <div class="cat-card" id="lora-container"></div>
+    <div style="margin-bottom:1.1em;">
+      <button class="btn-copy" onclick="copyAllPrompts()">全プロンプトコピー</button>
+    </div>
+    <div class="prompt-section">
+      <div class="prompt-col">
+        <span class="prompt-label">Positive</span>
+        <textarea id="positive-output" readonly></textarea>
+        <button class="btn-copy" onclick="copyPrompt('positive-output')">コピー</button>
       </div>
-
-      <div class="prompt-block">
-        <label for="negative-output">Negative Prompt</label>
-        <textarea id="negative-output" rows="4" readonly></textarea>
-        <div class="prompt-buttons">
-          <button onclick="copyToClipboard('negative-output')">コピー</button>
-          <button onclick="clearPrompt('negative-output')">リセット</button>
-        </div>
+      <div class="prompt-col">
+        <span class="prompt-label">Negative</span>
+        <textarea id="negative-output" readonly></textarea>
+        <button class="btn-copy" onclick="copyPrompt('negative-output')">コピー</button>
       </div>
-
-      <div class="prompt-block">
-        <label for="lora-output">LoRA Prompt</label>
-        <textarea id="lora-output" rows="3" readonly></textarea>
-        <div class="prompt-buttons">
-          <button onclick="copyToClipboard('lora-output')">コピー</button>
-          <button onclick="clearPrompt('lora-output')">リセット</button>
-        </div>
+      <div class="prompt-col">
+        <span class="prompt-label">LoRA</span>
+        <textarea id="lora-output" readonly></textarea>
+        <button class="btn-copy" onclick="copyPrompt('lora-output')">コピー</button>
       </div>
-    </section>
-
-    <!-- プリセット操作 -->
-    <section id="preset-tools">
-      <h2>プリセット</h2>
-      <button onclick="savePreset()">プリセット保存</button>
-      <button onclick="loadPreset()">プリセット読込</button>
-      <button onclick="clearPreset()">保存プリセット削除</button>
-    </section>
-
-    <!-- 一括リセット -->
-    <section id="reset-tools">
-      <h2>ツール操作</h2>
-      <button onclick="resetAll()">すべてリセット</button>
-    </section>
-
+    </div>
   </main>
-
-  <!-- フッター -->
   <footer>
-    <p>© Prompt Maker / Nova Anime XL 向け | 利用規約・ライセンス準拠</p>
+    <small>© Nova Anime XL Prompt Maker. 利用は自己責任／非公式ツール</small>
   </footer>
-
-  <!-- JSスクリプト -->
   <script src="main.js"></script>
-
 </body>
 </html>
