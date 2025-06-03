@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>プロンプトメーカー - Nova Anime XL</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- ヘッダー -->
+  <header>
+    <h1>🌌 プロンプトメーカー</h1>
+    <p>Nova Anime XL 向け高精度プロンプト自動生成ツール</p>
+  </header>
+
+  <!-- メイン -->
+  <main>
+
+    <!-- モード切替 -->
+    <section id="mode-select">
+      <h2>モード切替</h2>
+      <label><input type="radio" name="mode" value="2d" checked> 2D</label>
+      <label><input type="radio" name="mode" value="2.5d"> 2.5D</label>
+      <label><input type="radio" name="mode" value="real"> リアル</label>
+    </section>
+
+    <!-- タグデータセット切替 -->
+    <section id="dataset-select">
+      <h2>タグセット選択</h2>
+      <select id="tag-dataset" onchange="reloadTagsFromFile(this.value)">
+        <option value="tags_default.json">通常タグセット</option>
+        <option value="tags_fantasy.json">ファンタジー</option>
+      </select>
+    </section>
+
+    <!-- タグUI -->
+    <section id="tag-ui">
+      <h2>タグ選択</h2>
+      <div id="tag-container"></div>
+    </section>
+
+    <!-- NSFW切替＆タグ -->
+    <section id="nsfw-toggle">
+      <label><input type="checkbox" id="enable-nsfw"> NSFWタグを有効にする</label>
+    </section>
+    <section id="nsfw-tag-ui" style="display:none;">
+      <h2>NSFWタグ</h2>
+      <div id="nsfw-tag-container"></div>
+    </section>
+
+    <!-- LoRA選択 -->
+    <section id="lora-ui">
+      <h2>LoRA選択</h2>
+      <div id="lora-container"></div>
+    </section>
+
+    <!-- 出力欄 -->
+    <section>
+      <h2>生成プロンプト</h2>
+      <div class="prompt-block">
+        <label for="positive-output">Positive Prompt</label>
+        <textarea id="positive-output" rows="4" readonly></textarea>
+        <div class="prompt-buttons">
+          <button onclick="copyToClipboard('positive-output')">コピー</button>
+          <button onclick="clearPrompt('positive-output')">リセット</button>
+        </div>
+      </div>
+
+      <div class="prompt-block">
+        <label for="negative-output">Negative Prompt</label>
+        <textarea id="negative-output" rows="4" readonly></textarea>
+        <div class="prompt-buttons">
+          <button onclick="copyToClipboard('negative-output')">コピー</button>
+          <button onclick="clearPrompt('negative-output')">リセット</button>
+        </div>
+      </div>
+
+      <div class="prompt-block">
+        <label for="lora-output">LoRA Prompt</label>
+        <textarea id="lora-output" rows="3" readonly></textarea>
+        <div class="prompt-buttons">
+          <button onclick="copyToClipboard('lora-output')">コピー</button>
+          <button onclick="clearPrompt('lora-output')">リセット</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- プリセット操作 -->
+    <section id="preset-tools">
+      <h2>プリセット</h2>
+      <button onclick="savePreset()">プリセット保存</button>
+      <button onclick="loadPreset()">プリセット読込</button>
+      <button onclick="clearPreset()">保存プリセット削除</button>
+    </section>
+
+    <!-- 一括リセット -->
+    <section id="reset-tools">
+      <h2>ツール操作</h2>
+      <button onclick="resetAll()">すべてリセット</button>
+    </section>
+
+  </main>
+
+  <!-- フッター -->
+  <footer>
+    <p>© Prompt Maker / Nova Anime XL 向け | 利用規約・ライセンス準拠</p>
+  </footer>
+
+  <!-- JSスクリプト -->
+  <script src="main.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,104 @@
+body {
+  background: #121212;
+  color: #f0f0f0;
+  font-family: 'Helvetica Neue', sans-serif;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+}
+
+/* ヘッダー */
+header {
+  background: #1e1e1e;
+  color: #fce4ec;
+  text-align: center;
+  padding: 1.5rem;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #f48fb1;
+}
+
+header p {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: #e0e0e0;
+}
+
+/* メインとセクション */
+main {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+section {
+  background: #1c1c1c;
+  border-left: 5px solid #880e4f;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(255, 64, 129, 0.2);
+  box-sizing: border-box;
+}
+
+/* 見出し */
+h2 {
+  color: #f48fb1;
+  margin-top: 0;
+}
+
+/* プロンプトブロック */
+.prompt-block {
+  margin-bottom: 2rem;
+}
+
+.prompt-block label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #f8bbd0;
+}
+
+.prompt-block textarea {
+  width: 100%;
+  padding: 1rem;
+  font-family: monospace;
+  background: #262626;
+  color: #e0e0e0;
+  border: 2px solid #333;
+  border-radius: 6px;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+/* ボタンラップ */
+.prompt-buttons {
+  margin-top: 0.5rem;
+}
+
+/* ボタンスタイル */
+.prompt-buttons button {
+  background: #e91e63;
+  border: none;
+  color: white;
+  padding: 0.6rem 1.2rem;
+  margin-right: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.prompt-buttons button:hover {
+  background: #ad1457;
+}
+
+/* フッター */
+footer {
+  background: #1e1e1e;
+  text-align: center;
+  padding: 1.5rem;
+  font-size: 0.9rem;
+  color: #999;
+}
